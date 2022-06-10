@@ -1,3 +1,9 @@
+/* +==================================+ */
+/* +     Created By Subhan Fadilah    + */
+/* +     https://github.com/sbhan9    + */
+/* +     https://kosongempat.my.id    + */
+/* +==================================+ */
+
 const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const { default: axios } = require("axios");
