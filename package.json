@@ -1,0 +1,17 @@
+{
+  "name": "sbhanbot",
+  "version": "1.0.0",
+  "description": "bot whatsapp by sbhanbot v.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Subhan Fadilah",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "cfonts": "^3.1.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.16.6"
+  }
+}
