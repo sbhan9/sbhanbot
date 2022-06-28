@@ -44,11 +44,11 @@ client.on("message", async (msg) => {
   // for menu
   if (msg.body === ".menu") {
     msg.reply(
-      "*List Command sbhanbot v.1* \n*|-> About* \n|-> .menu [untuk lihat list menu] \n|-> .about [tentang bot] \n|\n*|-> Admin* \n|-> .tag [tag semua, kecuali admin]\n|\n*|-> Games* \n|-> .tebak gambar [untuk main tebak gambar] \n|\n*|-> Kata-kata* \n|-> .kata bijak [random kata2 bijak] \n|-> .kata faktaunik [random fakta unik] \n|-> .kata pakboy [generate pantun pakboy] \n|\n*|-> Islami* \n|-> .ayat kursi [menampilkan ayat kursi]\n|-> .doa [generate doa] \n|\n*|-> Media* \n|-> .stiker [foto kasih caption .stiker] \n|-> .pinterest {link} [downloader pinterest] \n|\n*|-> Search* \n|-> .wiki : {query} [pencarian wikipedia]\n|\n*|-> Info Bot* \n|-> .info [info bot]"
+      "*List Command sbhanbot* \n*|-> About* \n|-> .menu [untuk lihat list menu] \n|-> .about [tentang bot] \n|\n*|-> Admin* \n|-> .tag [tag semua, kecuali admin]\n|\n*|-> Games* \n|-> .tebak gambar [untuk main tebak gambar] \n|\n*|-> Kata-kata* \n|-> .kata bijak [random kata2 bijak] \n|-> .kata faktaunik [random fakta unik] \n|-> .kata pakboy [generate pantun pakboy] \n|\n*|-> Islami* \n|-> .ayat kursi [menampilkan ayat kursi]\n|-> .doa [generate doa] \n|\n*|-> Media* \n|-> .stiker [foto kasih caption .stiker] \n|-> .pinterest {link} [downloader pinterest] \n|\n*|-> Search* \n|-> .wiki : {query} [pencarian wikipedia]\n|\n*|-> Info Bot* \n|-> .info [info bot]"
     );
   } else if (msg.body === ".about") {
     msg.reply(
-      "*About :* \nAlasan pengembang membuat bot ini adalah terinspirasi dari seseorang sekaligus ingin belajar akan hal baru. Tentunya bot ini bertujuan untuk hal yang bermanfaat dan bot ini akan selalu di update sampai pengembang bosan. \n\nDeveloped with ❤ by Subhan Fadilah \nGithub : https://github.com/sbhan9"
+      "*About :* \nAlasan pengembang membuat bot ini adalah terinspirasi dari seseorang sekaligus ingin belajar akan hal baru. Tentunya bot ini bertujuan untuk hal yang bermanfaat dan bot ini akan selalu di update sampai pengembang bosan. Sekali lagi, Thanks kepada seseorang yang pernah dijadikan inspirasi sehingga sampai terciptanya bot ini. \n\nDeveloped with ❤ by Subhan Fadilah \nGithub : https://github.com/sbhan9"
     );
   }
 
@@ -184,12 +184,20 @@ client.on("message", async (msg) => {
   } else if (msg.body.indexOf(".pinterest") !== -1) {
     const link = msg.body.split(" ").pop();
     const pinterest = "https://api.akuari.my.id/downloader/pindl?link=" + link;
-    await axios.get(pinterest).then(function (respon) {
-      // code
-      global_var.media = respon.data;
-    });
-    console.log(global_var.media.split("."));
-    msg.reply("_Mohon maaf download file pinterest masih tahap pengembangan._");
+    try {
+      if (pinterest) {
+        await axios.get(pinterest).then(function (respon) {
+          global_var.mPinterest = respon.data;
+        });
+        const toArr = global_var.mPinterest.result.split(".");
+        const extFile = toArr[toArr.length - 1];
+        const result = await dgambar(global_var.mPinterest.result);
+        const media = new MessageMedia("image/" + extFile, result);
+        client.sendMessage(msg.from, media, { caption: "*Gambar dari link :* " + link + ". \nrequest dari @" + contact.id.user, mentions: [contact] });
+      }
+    } catch (error) {
+      msg.reply("_Command tidak valid, harus berisi link pinterest!_");
+    }
   }
 
   // Search
@@ -215,10 +223,10 @@ client.on("message", async (msg) => {
 
   if (msg.body === ".bot off") {
     if (contact.number === "628999098812") {
-      msg.reply("_bot akan dimatikan dalam 30 detik bos._");
+      msg.reply("_bot akan dimatikan dalam 5 detik kedepan._");
       setTimeout(function () {
         process.exit();
-      }, 30000);
+      }, 5000);
     } else {
       msg.reply("_bot hanya bisa dimatikan oleh pengembang ya._");
     }
@@ -226,10 +234,9 @@ client.on("message", async (msg) => {
 
   const chat = await msg.getChat();
   if (msg.body === ".info") {
-    msg.reply("_Setelah pembuatan fitur download pinterest selesai maka bot tidak akan diupdate lagi. Apabila ingin belajar tentang bot atau ingin mengembangkan bot ini silahkan masukan Command : .unduh bot_ \n\n- by sbhan v.1 -");
-  } else if (msg.body === ".unduh bot") {
-    const linkUnduh = "";
-    msg.reply(linkUnduh + "\n\nSilahkan unduh project bot sbhanbot v.1 di google drive \n\n*Tutorial Installasi* \n1. ");
+    msg.reply(
+      "_Setelah pembuatan fitur download pinterest selesai maka bot tidak akan diupdate lagi. Apabila ingin belajar tentang bot atau ingin mengembangkan bot ini silahkan mengunjungi https://github.com/sbhan9/sbhanbot_ \n\n- by sbhan -"
+    );
   }
 });
 
