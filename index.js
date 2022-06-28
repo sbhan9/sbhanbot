@@ -7,9 +7,7 @@
 const { Client, LocalAuth, MessageMedia } = require("whatsapp-web.js");
 const qrcode = require("qrcode-terminal");
 const { default: axios } = require("axios");
-const { glob } = require("glob");
 const CFonts = require("cfonts");
-const ResponseLike = require("responselike");
 const global_var = {};
 global_var.tebak_gambar = {};
 global_var.id_gambar = {};
@@ -25,11 +23,7 @@ function dgambar(url) {
 
 // C:\ffmpeg\bin
 const client = new Client({
-  puppeteer: {
-    executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-  },
   authStrategy: new LocalAuth(),
-  ffmpegPath: "C:\\ffmpeg\\bin\\ffmpeg.exe",
 });
 
 client.on("qr", (qr) => {
