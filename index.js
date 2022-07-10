@@ -21,7 +21,6 @@ function dgambar(url) {
     .then((response) => Buffer.from(response.data, "binary").toString("base64"));
 }
 
-// C:\ffmpeg\bin
 const client = new Client({
   authStrategy: new LocalAuth(),
 });
@@ -52,25 +51,25 @@ client.on("message", async (msg) => {
     );
   }
 
-  // for game tebak gambar
+  /* for game tebak gambar */
   if (msg.body === ".tebak gambar") {
     msg.reply("_sedang menggenerate gambar..._");
-    await axios.get("https://api.akuari.my.id/games/tebakgambar").then(function (resp) {
+    await axios.get("https://zenzapis.xyz/entertainment/tebakgambar?apikey=8f3e3a9d3f21").then(function (resp) {
       global_var.data_gambar = resp.data;
     });
 
-    const g = "id";
-    global_var.tebak_gambar[global_var.data_gambar.img.split("/").pop().split(".")[0]] = global_var.data_gambar.jawaban.toLowerCase();
-    const idGambar = (global_var.id_gambar[g] = global_var.data_gambar.img.split("/").pop().split(".")[0]);
+    console.log(global_var.data_gambar);
 
-    const gambar = await dgambar(global_var.data_gambar.img);
-    const media = new MessageMedia("image/png", gambar);
+    const gambar = await dgambar(global_var.data_gambar.result.img);
+    const media = new MessageMedia("image/jpg", gambar);
 
     client.sendMessage(msg.from, media, {
       caption:
         `Haii @${contact.id.user}` +
         " silahkan menjawab dengan benar 😇\n\nID Gambar : " +
-        global_var.data_gambar.img.split("/").pop().split(".")[0] +
+        global_var.data_gambar.result.index +
+        "\nDeskripsi Gambar : " +
+        global_var.data_gambar.result.deskripsi +
         "\n\nUntuk menjawab jawaban gunakan perintah : .jawab idGambar : jawaban \n\nContoh : .jawab 123 : kucing garong \n\nDeveloped by Subhan Fadilah",
       mentions: [contact],
     });
@@ -78,35 +77,28 @@ client.on("message", async (msg) => {
     var id = msg.body.split(" ")[1];
     try {
       var jawaban = msg.body.split(":")[1].replace(" ", "").toLowerCase();
+      if (id == global_var.data_gambar.result.index) {
+        if (jawaban == global_var.data_gambar.result.jawaban.toLowerCase()) {
+          // balas jawaban benar
+          msg.reply("Jawaban benar 👏👏👏");
+        } else {
+          //   balas salah
+          msg.reply("Jawaban kurang tepat!");
+        }
+      } else {
+        msg.reply("ID Gambar tidak valid!");
+      }
     } catch (error) {
       msg.reply("ID Gambar tidak valid!");
       return;
     }
-    if (global_var.tebak_gambar[id]) {
-      if (jawaban == global_var.tebak_gambar[id]) {
-        // balas jawaban benar
-        msg.reply("Jawaban benar 👏👏👏");
-      } else {
-        //   balas salah
-        msg.reply("Jawaban kurang tepat!");
-      }
-    } else {
-      //   balas id tidak valid
-      msg.reply("ID Gambar tidak valid!");
-    }
   } else if (msg.body.indexOf(".nyerah") !== -1) {
     var id = msg.body.split(" ").pop();
-    if (global_var.id_gambar.id) {
-      if (id == global_var.id_gambar.id) {
-        msg.reply("Anda Menyerah 😭 \nJawabannya adalah : " + global_var.data_gambar.jawaban);
-      } else {
-        msg.reply("ID Gambar tidak valid!");
-      }
+    if (id == global_var.data_gambar.result.index) {
+      msg.reply("Anda Menyerah 😭 \nJawabannya adalah : " + global_var.data_gambar.result.jawaban);
     } else {
       msg.reply("ID Gambar tidak valid!");
     }
-  } else if (msg.body == ".soal") {
-    msg.reply("_Masih dalam tahap pembuatan. 🙏_");
   }
 
   // kata kata
